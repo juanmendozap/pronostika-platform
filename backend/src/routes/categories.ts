@@ -1,14 +1,14 @@
-import { Router, Response } from 'express';
+import { Router, Request, Response } from 'express';
 import { pool } from '../config/database';
 import { authenticate, AuthRequest } from '../middleware/auth';
 
 const router = Router();
 
-// Get all categories
-router.get('/', async (req: AuthRequest, res: Response, next) => {
+// Get all categories (public endpoint)
+router.get('/', async (req: Request, res: Response, next) => {
   try {
     const result = await pool.query(
-      'SELECT id, name, description, is_active FROM bet_categories WHERE is_active = true ORDER BY name'
+      'SELECT id, name, description, color FROM categories ORDER BY name'
     );
 
     res.json({
