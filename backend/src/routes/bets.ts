@@ -1,4 +1,4 @@
-import { Router, Response } from 'express';
+import { Router, Request, Response } from 'express';
 import Joi from 'joi';
 import { pool } from '../config/database';
 import { authenticate, AuthRequest } from '../middleware/auth';
@@ -96,18 +96,18 @@ router.post('/:id/place', authenticate, async (req: AuthRequest, res: Response, 
   }
 });
 
-// Get all bets with filtering
-router.get('/', async (req: AuthRequest, res: Response, next) => {
+// Get all bets with filtering (public endpoint)
+router.get('/', async (req: Request, res: Response, next) => {
   try {
     const { category, status, limit = '50' } = req.query;
     
-    let whereClause = "WHERE b.status IN ('active', 'closed', 'paused')";
+    let whereClause = "WHERE b.status IN ('open', 'closed')";
     const params: any[] = [];
     let paramIndex = 1;
 
     // Filter by category
     if (category && category !== 'all') {
-      whereClause += ` AND LOWER(bc.name) = LOWER($${paramIndex})`;
+      whereClause += ` AND LOWER(c.name) = LOWER($${paramIndex})`;
       params.push(category);
       paramIndex++;
     }
@@ -115,9 +115,9 @@ router.get('/', async (req: AuthRequest, res: Response, next) => {
     // Filter by status
     if (status && status !== 'all') {
       if (status === 'open') {
-        whereClause += ` AND b.status = 'active'`;
+        whereClause += ` AND b.status = 'open'`;
       } else if (status === 'closed') {
-        whereClause += ` AND b.status IN ('closed', 'paused')`;
+        whereClause += ` AND b.status = 'closed'`;
       }
     }
 
@@ -126,27 +126,25 @@ router.get('/', async (req: AuthRequest, res: Response, next) => {
         b.id,
         b.title,
         b.description,
-        b.total_pool,
         b.status,
         b.created_at,
-        bc.name as category_name,
-        bc.id as category_id,
+        c.name as category_name,
+        c.id as category_id,
         array_agg(
           json_build_object(
             'id', bo.id,
-            'text', bo.text,
-            'odds', bo.odds,
-            'total_staked', bo.total_staked
+            'text', bo.option_text,
+            'odds', bo.odds
           ) ORDER BY bo.created_at
         ) as options
       FROM bets b
-      JOIN bet_categories bc ON b.category_id = bc.id
+      JOIN categories c ON b.category_id = c.id
       JOIN bet_options bo ON b.id = bo.bet_id
       ${whereClause}
-      GROUP BY b.id, bc.name, bc.id
+      GROUP BY b.id, c.name, c.id
       ORDER BY 
-        CASE WHEN b.status = 'active' THEN 1 ELSE 2 END,
-        bc.name,
+        CASE WHEN b.status = 'open' THEN 1 ELSE 2 END,
+        c.name,
         b.created_at DESC
       LIMIT $${paramIndex}
     `;
