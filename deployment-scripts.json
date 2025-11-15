@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build:prod": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "deploy:vercel": "cd frontend && vercel --prod",
+    "deploy:backend": "cd backend && npm run deploy",
+    "setup:prod": "npm run install:all && npm run db:setup:prod",
+    "db:setup:prod": "cd database && node setup-production.js"
+  }
+}
