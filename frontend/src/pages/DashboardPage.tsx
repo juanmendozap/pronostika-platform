@@ -36,8 +36,11 @@ const DashboardPage: React.FC = () => {
   const { t, language } = useLanguage()
   
   // Debug: Check if translations are working
-  console.log('Current language:', language)
-  console.log('Dashboard title translation:', t('dashboard.title'))
+  useEffect(() => {
+    console.log('Language changed to:', language)
+    console.log('Dashboard title translation:', t('dashboard.title'))
+    console.log('Available bets translation:', t('dashboard.availableBets'))
+  }, [language, t])
 
   // Function to translate category names
   const translateCategory = (categoryName: string): string => {
@@ -213,8 +216,8 @@ alert(t('bet.failedToPlace'))
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.title')}</h1>
-        <p className="mt-2 text-gray-600">{t('dashboard.welcomeBack')}, {user?.username}!</p>
+        <h1 className="text-3xl font-bold text-gray-900">{language === 'es' ? 'Panel Principal' : 'Dashboard'}</h1>
+        <p className="mt-2 text-gray-600">{language === 'es' ? 'Bienvenido de nuevo' : 'Welcome back'}, {user?.username}!</p>
         <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-lg font-semibold text-blue-900">
 {t('bet.availablePoints')}: <span className="text-2xl">{user?.points?.toLocaleString()}</span>
