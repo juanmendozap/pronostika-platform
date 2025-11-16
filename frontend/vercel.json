@@ -1,40 +1,8 @@
 {
-  "version": 2,
-  "name": "pronostika-frontend",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "https://api.prosnostika.com/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://api.prosnostika.com/api/$1"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
+      "destination": "https://pronostika-platform-production.up.railway.app/api/$1"
     }
   ]
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { API_BASE_URL } from '../config/api'
 
 interface LeaderboardEntry {
   id: string;
@@ -26,7 +27,7 @@ const LeaderboardPage: React.FC = () => {
   const fetchLeaderboard = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('/api/users/leaderboard', {
+const response = await fetch(`${API_BASE_URL}/api/users/leaderboard`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

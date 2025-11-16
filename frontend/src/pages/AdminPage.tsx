@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { API_BASE_URL } from '../config/api'
 
 interface Category {
   id: string;
@@ -41,7 +42,7 @@ const AdminPage: React.FC = () => {
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('/api/categories', {
+const response = await fetch(`${API_BASE_URL}/api/categories`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -98,7 +99,7 @@ const AdminPage: React.FC = () => {
     setCreating(true)
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('/api/admin/bets', {
+const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

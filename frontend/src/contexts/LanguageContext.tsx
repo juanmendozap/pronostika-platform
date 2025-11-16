@@ -89,6 +89,35 @@ const translations = {
     'history.stats.totalLost': 'Total Points Lost',
     'history.stats.netGain': 'Net Gain/Loss',
     
+    // Bet statuses
+    'bet.open': 'Open',
+    'bet.closed': 'Closed',
+    'bet.resolved': 'Resolved',
+    'bet.cancelled': 'Cancelled',
+    
+    // Betting interface
+    'bet.availablePoints': 'Available Points',
+    'bet.pool': 'Pool',
+    'bet.totalPool': 'Total Pool',
+    'bet.betAmount': 'Bet Amount (Points)',
+    'bet.potentialWinnings': 'Potential Winnings',
+    'bet.placeBet': 'Place Bet',
+    'bet.placingBet': 'Placing Bet...',
+    'bet.pointsStaked': 'points staked',
+    'bet.potential': 'potential',
+    'bet.noBeetsFound': 'No bets found matching your filters.',
+    'bet.failedToPlace': 'Failed to place bet',
+    
+    // Categories
+    'category.sports': 'Sports',
+    'category.politics': 'Politics',
+    'category.technology': 'Technology',
+    'category.cryptocurrency': 'Cryptocurrency',
+    'category.entertainment': 'Entertainment',
+    'category.weather': 'Weather',
+    'category.socialMedia': 'Social Media',
+    'category.finance': 'Finance',
+    
     // Common
     'common.loading': 'Loading...',
     'common.error': 'Error',
@@ -175,6 +204,35 @@ const translations = {
     'history.stats.totalWon': 'Puntos Totales Ganados',
     'history.stats.totalLost': 'Puntos Totales Perdidos',
     'history.stats.netGain': 'Ganancia/Pérdida Neta',
+    
+    // Bet statuses
+    'bet.open': 'Abierta',
+    'bet.closed': 'Cerrada',
+    'bet.resolved': 'Resuelta',
+    'bet.cancelled': 'Cancelada',
+    
+    // Betting interface
+    'bet.availablePoints': 'Puntos Disponibles',
+    'bet.pool': 'Bote',
+    'bet.totalPool': 'Bote Total',
+    'bet.betAmount': 'Cantidad a Apostar (Puntos)',
+    'bet.potentialWinnings': 'Ganancia Potencial',
+    'bet.placeBet': 'Apostar',
+    'bet.placingBet': 'Apostando...',
+    'bet.pointsStaked': 'puntos apostados',
+    'bet.potential': 'potencial',
+    'bet.noBeetsFound': 'No se encontraron apuestas que coincidan con tus filtros.',
+    'bet.failedToPlace': 'Error al realizar la apuesta',
+    
+    // Categories
+    'category.sports': 'Deportes',
+    'category.politics': 'Política',
+    'category.technology': 'Tecnología',
+    'category.cryptocurrency': 'Criptomoneda',
+    'category.entertainment': 'Entretenimiento',
+    'category.weather': 'Clima',
+    'category.socialMedia': 'Redes Sociales',
+    'category.finance': 'Finanzas',
     
     // Common
     'common.loading': 'Cargando...',

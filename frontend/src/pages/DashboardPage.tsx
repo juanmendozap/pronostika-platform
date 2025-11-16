@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useLanguage } from '../contexts/LanguageContext'
+import { API_BASE_URL } from '../config/api'
 
 interface BetOption {
   id: string;
@@ -31,6 +33,7 @@ interface UserBet {
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuth()
+  const { t } = useLanguage()
 
   // Helper functions for category styling
   const getCategoryColor = (category: string) => {
@@ -86,7 +89,7 @@ const DashboardPage: React.FC = () => {
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('/api/categories', {
+const response = await fetch(`${API_BASE_URL}/api/categories`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -103,7 +106,7 @@ const DashboardPage: React.FC = () => {
   const fetchBets = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('/api/bets', {
+const response = await fetch(`${API_BASE_URL}/api/bets`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -122,7 +125,7 @@ const DashboardPage: React.FC = () => {
   const fetchUserBets = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('/api/users/bets', {
+const response = await fetch(`${API_BASE_URL}/api/users/bets`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -142,7 +145,7 @@ const DashboardPage: React.FC = () => {
     setPlacing(true)
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`/api/bets/${selectedBet}/place`, {
+const response = await fetch(`${API_BASE_URL}/api/bets/${selectedBet}/place`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -167,11 +170,11 @@ const DashboardPage: React.FC = () => {
         // Update user points in context if needed
         window.location.reload() // Simple way to refresh user data
       } else {
-        alert(data.error || 'Failed to place bet')
+alert(data.error || t('bet.failedToPlace'))
       }
     } catch (error) {
       console.error('Error placing bet:', error)
-      alert('Failed to place bet')
+alert(t('bet.failedToPlace'))
     } finally {
       setPlacing(false)
     }
@@ -195,7 +198,7 @@ const DashboardPage: React.FC = () => {
         <p className="mt-2 text-gray-600">Welcome back, {user?.username}!</p>
         <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-lg font-semibold text-blue-900">
-            Available Points: <span className="text-2xl">{user?.points?.toLocaleString()}</span>
+{t('bet.availablePoints')}: <span className="text-2xl">{user?.points?.toLocaleString()}</span>
           </p>
         </div>
       </div>
@@ -269,6 +272,7 @@ const DashboardPage: React.FC = () => {
               if (selectedStatus === 'open') {
                 filteredBets = filteredBets.filter(bet => bet.status === 'active');
               } else if (selectedStatus === 'closed') {
+                // Show only bets that are closed, resolved, or cancelled (not active)
                 filteredBets = filteredBets.filter(bet => bet.status !== 'active');
               }
             }
@@ -277,7 +281,7 @@ const DashboardPage: React.FC = () => {
               return (
                 <div className="bg-white rounded-lg shadow p-6">
                   <p className="text-gray-500">
-                    No bets found matching your filters.
+{t('bet.noBeetsFound')}
                   </p>
                 </div>
               );
@@ -311,11 +315,17 @@ const DashboardPage: React.FC = () => {
                                 <h4 className="text-lg font-semibold text-gray-900">{bet.title}</h4>
                                 <p className="text-gray-600 text-sm mt-1">{bet.description}</p>
                                 <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                                  <span>Pool: {bet.total_pool} points</span>
+                                  <span>{t('bet.pool')}: {bet.total_pool} {t('common.points')}</span>
                                   <span className={`px-2 py-1 rounded-full ${
-                                    bet.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                                    bet.status === 'active' ? 'bg-green-100 text-green-800' : 
+                                    bet.status === 'resolved' ? 'bg-blue-100 text-blue-800' :
+                                    bet.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                                    'bg-gray-100 text-gray-800'
                                   }`}>
-                                    {bet.status === 'active' ? '🟢 Open' : '🔴 Closed'}
+                                    {bet.status === 'active' ? `🟢 ${t('bet.open')}` : 
+                                     bet.status === 'resolved' ? `✅ ${t('bet.resolved')}` :
+                                     bet.status === 'cancelled' ? `❌ ${t('bet.cancelled')}` :
+                                     `🔴 ${t('bet.closed')}`}
                                   </span>
                                 </div>
                               </div>
@@ -371,7 +381,7 @@ const DashboardPage: React.FC = () => {
                       </div>
                       <p className="text-gray-600 mt-1">{bet.description}</p>
                       <p className="text-sm text-gray-500 mt-2">
-                        Total Pool: {bet.total_pool} points
+{t('bet.totalPool')}: {bet.total_pool} {t('common.points')}
                       </p>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -407,7 +417,7 @@ const DashboardPage: React.FC = () => {
                               {option.odds.toFixed(2)}x odds
                             </div>
                             <div className="text-gray-500">
-                              {option.total_staked} points staked
+{option.total_staked} {t('bet.pointsStaked')}
                             </div>
                           </div>
                         </div>
@@ -430,7 +440,7 @@ const DashboardPage: React.FC = () => {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Bet Amount (Points)
+{t('bet.betAmount')}
                   </label>
                   <input
                     type="number"
@@ -442,7 +452,7 @@ const DashboardPage: React.FC = () => {
                   />
                 </div>
                 <div className="text-sm text-gray-600">
-                  Potential winnings: <span className="font-bold text-green-600">
+{t('bet.potentialWinnings')}: <span className="font-bold text-green-600">
                     {Math.floor(betAmount * (bets.find(b => b.id === selectedBet)?.options.find(o => o.id === selectedOption)?.odds || 1))} points
                   </span>
                 </div>
@@ -451,7 +461,7 @@ const DashboardPage: React.FC = () => {
                   disabled={placing || betAmount <= 0 || betAmount > (user?.points || 0)}
                   className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
-                  {placing ? 'Placing Bet...' : 'Place Bet'}
+{placing ? t('bet.placingBet') : t('bet.placeBet')}
                 </button>
               </div>
             </div>
@@ -469,7 +479,7 @@ const DashboardPage: React.FC = () => {
                     <div className="font-medium text-sm">{userBet.bet_title}</div>
                     <div className="text-sm text-gray-600">{userBet.option_text}</div>
                     <div className="text-xs text-gray-500">
-                      {userBet.amount} points → {userBet.potential_winnings} potential
+{userBet.amount} {t('common.points')} → {userBet.potential_winnings} {t('bet.potential')}
                     </div>
                     <span className={`inline-block px-2 py-1 text-xs rounded-full ${
                       userBet.status === 'active' ? 'bg-yellow-100 text-yellow-800' :

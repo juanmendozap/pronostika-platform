@@ -61,7 +61,7 @@ The frontend will be available at `http://localhost:3000` and the backend at `ht
 
 ## Production Deployment
 
-For production deployment to your domain (prosnostika.com), see [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md).
+For production deployment to your domain (pronostika.com.mx), see [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md).
 
 ## Environment Variables
 

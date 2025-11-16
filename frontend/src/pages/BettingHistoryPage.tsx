@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { API_BASE_URL } from '../config/api'
 
 interface BetHistory {
   id: string;
@@ -13,7 +14,7 @@ interface BetHistory {
 }
 
 const BettingHistoryPage: React.FC = () => {
-  const { user } = useAuth()
+  const { } = useAuth() // Removed unused 'user' variable
   const [bets, setBets] = useState<BetHistory[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all') // all, active, won, lost
@@ -36,7 +37,7 @@ const BettingHistoryPage: React.FC = () => {
   const fetchBettingHistory = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('/api/users/bets', {
+const response = await fetch(`${API_BASE_URL}/api/users/bets`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
