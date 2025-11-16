@@ -35,6 +35,21 @@ const DashboardPage: React.FC = () => {
   const { user } = useAuth()
   const { t } = useLanguage()
 
+  // Function to translate category names
+  const translateCategory = (categoryName: string): string => {
+    const categoryMap: Record<string, string> = {
+      'Sports': t('category.sports'),
+      'Politics': t('category.politics'), 
+      'Technology': t('category.technology'),
+      'Cryptocurrency': t('category.cryptocurrency'),
+      'Entertainment': t('category.entertainment'),
+      'Weather': t('category.weather'),
+      'Social Media': t('category.socialMedia'),
+      'Finance': t('category.finance')
+    }
+    return categoryMap[categoryName] || categoryName
+  }
+
   // Helper functions for category styling
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
@@ -194,8 +209,8 @@ alert(t('bet.failedToPlace'))
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="mt-2 text-gray-600">Welcome back, {user?.username}!</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.title')}</h1>
+        <p className="mt-2 text-gray-600">{t('dashboard.welcomeBack')}, {user?.username}!</p>
         <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-lg font-semibold text-blue-900">
 {t('bet.availablePoints')}: <span className="text-2xl">{user?.points?.toLocaleString()}</span>
@@ -208,7 +223,7 @@ alert(t('bet.failedToPlace'))
         <div className="lg:col-span-2">
           <div className="mb-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-              <h2 className="text-2xl font-bold">Available Bets</h2>
+              <h2 className="text-2xl font-bold">{t('dashboard.availableBets')}</h2>
               
               {/* View Mode Toggle */}
               <div className="flex items-center space-x-2 mt-4 sm:mt-0">
@@ -218,7 +233,7 @@ alert(t('bet.failedToPlace'))
                     viewMode === 'category' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'
                   }`}
                 >
-                  📂 By Topic
+                  📂 {t('dashboard.byTopic')}
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
@@ -226,7 +241,7 @@ alert(t('bet.failedToPlace'))
                     viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'
                   }`}
                 >
-                  📄 List View
+                  📄 {t('dashboard.listView')}
                 </button>
               </div>
             </div>
@@ -239,10 +254,10 @@ alert(t('bet.failedToPlace'))
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">All Categories</option>
+                <option value="all">{t('dashboard.allCategories')}</option>
                 {categories.map(category => (
                   <option key={category.id} value={category.name.toLowerCase()}>
-                    {category.name}
+                    {translateCategory(category.name)}
                   </option>
                 ))}
               </select>
@@ -253,7 +268,7 @@ alert(t('bet.failedToPlace'))
                 onChange={(e) => setSelectedStatus(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">All Status</option>
+                <option value="all">{t('dashboard.allStatus')}</option>
                 <option value="open">🟢 Open Bets</option>
                 <option value="closed">🔴 Closed Bets</option>
               </select>
@@ -302,9 +317,9 @@ alert(t('bet.failedToPlace'))
                   {Object.entries(betsByCategory).map(([categoryName, categoryBets]) => (
                     <div key={categoryName} className="space-y-4">
                       <div className="flex items-center space-x-2">
-                        <h3 className="text-xl font-semibold text-gray-900">{categoryName}</h3>
+                        <h3 className="text-xl font-semibold text-gray-900">{translateCategory(categoryName)}</h3>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryBadge(categoryName)}`}>
-                          {categoryBets.length} bet{categoryBets.length !== 1 ? 's' : ''}
+                          {categoryBets.length} {categoryBets.length === 1 ? t('dashboard.betCount') : t('dashboard.betsCount')}
                         </span>
                       </div>
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -469,9 +484,9 @@ alert(t('bet.failedToPlace'))
 
           {/* User's Bets */}
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Your Bets</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('dashboard.yourBets')}</h3>
             {userBets.length === 0 ? (
-              <p className="text-gray-500">You haven't placed any bets yet.</p>
+              <p className="text-gray-500">{t('dashboard.noUserBets')}</p>
             ) : (
               <div className="space-y-3">
                 {userBets.slice(0, 5).map((userBet) => (

@@ -20,10 +20,15 @@ const translations = {
     'nav.logout': 'Logout',
     
     // Dashboard
-    'dashboard.title': 'Betting Dashboard',
+    'dashboard.title': 'Dashboard',
+    'dashboard.welcomeBack': 'Welcome back',
+    'dashboard.availableBets': 'Available Bets',
+    'dashboard.yourBets': 'Your Bets',
+    'dashboard.noUserBets': 'You haven\'t placed any bets yet.',
     'dashboard.byTopic': 'By Topic',
     'dashboard.listView': 'List View',
     'dashboard.allCategories': 'All Categories',
+    'dashboard.allStatus': 'All Status',
     'dashboard.sports': 'Sports',
     'dashboard.politics': 'Politics',
     'dashboard.social': 'Social',
@@ -36,6 +41,8 @@ const translations = {
     'dashboard.resolved': 'Resolved',
     'dashboard.noBets': 'No bets available',
     'dashboard.endDate': 'End Date',
+    'dashboard.betCount': 'bet',
+    'dashboard.betsCount': 'bets',
     
     // Login
     'login.title': 'Sign in to your account',
@@ -159,10 +166,15 @@ const translations = {
     'nav.logout': 'Cerrar Sesión',
     
     // Dashboard
-    'dashboard.title': 'Panel de Apuestas',
+    'dashboard.title': 'Panel Principal',
+    'dashboard.welcomeBack': 'Bienvenido de nuevo',
+    'dashboard.availableBets': 'Apuestas Disponibles',
+    'dashboard.yourBets': 'Tus Apuestas',
+    'dashboard.noUserBets': 'Aún no has realizado ninguna apuesta.',
     'dashboard.byTopic': 'Por Tema',
-    'dashboard.listView': 'Vista de Lista',
+    'dashboard.listView': 'Vista de Lista',  
     'dashboard.allCategories': 'Todas las Categorías',
+    'dashboard.allStatus': 'Todos los Estados',
     'dashboard.sports': 'Deportes',
     'dashboard.politics': 'Política',
     'dashboard.social': 'Social',
@@ -175,6 +187,8 @@ const translations = {
     'dashboard.resolved': 'Resuelta',
     'dashboard.noBets': 'No hay apuestas disponibles',
     'dashboard.endDate': 'Fecha de Cierre',
+    'dashboard.betCount': 'apuesta',
+    'dashboard.betsCount': 'apuestas',
     
     // Login
     'login.title': 'Inicia sesión en tu cuenta',
