@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useLanguage } from '../contexts/LanguageContext'
 import { API_BASE_URL } from '../config/api'
 
 interface LeaderboardEntry {
@@ -16,6 +17,7 @@ interface LeaderboardEntry {
 
 const LeaderboardPage: React.FC = () => {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [currentUserRank, setCurrentUserRank] = useState<LeaderboardEntry | null>(null)

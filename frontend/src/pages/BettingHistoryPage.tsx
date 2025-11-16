@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useLanguage } from '../contexts/LanguageContext'
 import { API_BASE_URL } from '../config/api'
 
 interface BetHistory {
@@ -15,6 +16,7 @@ interface BetHistory {
 
 const BettingHistoryPage: React.FC = () => {
   const { } = useAuth() // Removed unused 'user' variable
+  const { t } = useLanguage()
   const [bets, setBets] = useState<BetHistory[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all') // all, active, won, lost

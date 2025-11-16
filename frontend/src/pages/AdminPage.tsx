@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { useLanguage } from '../contexts/LanguageContext'
 import { API_BASE_URL } from '../config/api'
 
 interface Category {
@@ -22,6 +23,7 @@ interface NewBet {
 
 const AdminPage: React.FC = () => {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('create-bet')
@@ -87,12 +89,12 @@ const response = await fetch(`${API_BASE_URL}/api/categories`, {
     e.preventDefault()
     
     if (!newBet.title || !newBet.description || !newBet.categoryId) {
-      alert('Please fill in all required fields')
+      alert(t('admin.fillRequired'))
       return
     }
 
     if (newBet.options.some(opt => !opt.text || opt.odds <= 0)) {
-      alert('Please fill in all betting options with valid odds')
+      alert(t('admin.fillOptions'))
       return
     }
 
@@ -110,7 +112,7 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
 
       const data = await response.json()
       if (data.success) {
-        alert('Bet created successfully!')
+        alert(t('admin.betCreated'))
         // Reset form
         setNewBet({
           title: '',
@@ -119,11 +121,11 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
           options: [{ text: '', odds: 1.0 }, { text: '', odds: 1.0 }]
         })
       } else {
-        alert(data.error || 'Failed to create bet')
+        alert(data.error || t('admin.failedToCreate'))
       }
     } catch (error) {
       console.error('Error creating bet:', error)
-      alert('Failed to create bet')
+      alert(t('admin.failedToCreate'))
     } finally {
       setCreating(false)
     }
@@ -153,8 +155,8 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
   return (
     <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
-        <p className="mt-2 text-gray-600">Manage betting categories, create new bets, and monitor platform activity.</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('admin.title')}</h1>
+        <p className="mt-2 text-gray-600">{t('admin.subtitle')}</p>
       </div>
 
       {/* Tab Navigation */}
@@ -168,7 +170,7 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            Create New Bet
+{t('admin.createBet')}
           </button>
           <button
             onClick={() => setActiveTab('manage-categories')}
@@ -178,7 +180,7 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            Manage Categories
+            {t('admin.manageCategories')}
           </button>
         </nav>
       </div>
@@ -186,14 +188,14 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
       {/* Create New Bet Tab */}
       {activeTab === 'create-bet' && (
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold mb-6">Create New Betting Market</h2>
+          <h2 className="text-xl font-semibold mb-6">{t('admin.createBettingMarket')}</h2>
           
           <form onSubmit={createBet} className="space-y-6">
             {/* Basic Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Bet Title *
+                  {t('admin.betTitle')} *
                 </label>
                 <input
                   type="text"
@@ -207,7 +209,7 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Category *
+                  {t('admin.category')} *
                 </label>
                 <select
                   value={newBet.categoryId}
@@ -215,7 +217,7 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 >
-                  <option value="">Select a category</option>
+                  <option value="">{t('admin.selectCategory')}</option>
                   {categories.map(category => (
                     <option key={category.id} value={category.id}>
                       {category.name}
@@ -227,14 +229,14 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description *
+                {t('admin.description')} *
               </label>
               <textarea
                 value={newBet.description}
                 onChange={(e) => setNewBet(prev => ({ ...prev, description: e.target.value }))}
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Provide detailed description of the betting market..."
+                placeholder={t('admin.descriptionPlaceholder')}
                 required
               />
             </div>
@@ -243,14 +245,14 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Betting Options *
+                  {t('admin.bettingOptions')} *
                 </label>
                 <button
                   type="button"
                   onClick={addOption}
                   className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
                 >
-                  Add Option
+                  {t('admin.addOption')}
                 </button>
               </div>
               
@@ -262,7 +264,7 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
                         type="text"
                         value={option.text}
                         onChange={(e) => updateOption(index, 'text', e.target.value)}
-                        placeholder={`Option ${index + 1} (e.g., "Yes" or "Above $50,000")`}
+                        placeholder={`${t('admin.option')} ${index + 1} (e.g., "Yes" or "Above $50,000")`}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                       />
@@ -274,7 +276,7 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
                         onChange={(e) => updateOption(index, 'odds', parseFloat(e.target.value) || 1.0)}
                         step="0.1"
                         min="1.0"
-                        placeholder="Odds"
+                        placeholder={t('admin.odds')}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                       />
@@ -299,7 +301,7 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
                 disabled={creating}
                 className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
-                {creating ? 'Creating Bet...' : 'Create Betting Market'}
+                {creating ? t('admin.creating') : t('admin.createBetButton')}
               </button>
             </div>
           </form>
