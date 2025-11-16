@@ -33,7 +33,11 @@ interface UserBet {
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuth()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
+  
+  // Debug: Check if translations are working
+  console.log('Current language:', language)
+  console.log('Dashboard title translation:', t('dashboard.title'))
 
   // Function to translate category names
   const translateCategory = (categoryName: string): string => {
