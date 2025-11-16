@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import { API_BASE_URL } from '../config/api'
+import { getCacheBustTitle, getCacheBustWelcome } from '../utils/cacheBust'
 
 interface BetOption {
   id: string;
@@ -217,11 +218,10 @@ alert(t('bet.failedToPlace'))
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">
-          🔄 CACHE BUST v2 🔄 - {language} - {language === 'es' ? 'Panel Principal' : 'Dashboard'}
+          {getCacheBustTitle(language)}
         </h1>
         <p className="mt-2 text-gray-600">
-          ⏰ Build Time: {new Date().toISOString()} ⏰<br/>
-          {language === 'es' ? 'Bienvenido de nuevo' : 'Welcome back'}, {user?.username}!
+          {getCacheBustWelcome(language, user?.username || 'user')}
         </p>
         <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-lg font-semibold text-blue-900">
