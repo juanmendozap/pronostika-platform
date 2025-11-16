@@ -10,7 +10,7 @@ const getApiUrl = () => {
   }
   
   // Production fallback - using the current Railway deployment URL
-  return 'https://pronostika-production.up.railway.app';
+  return 'https://pronostika-platform-production.up.railway.app';
 };
 
 export const API_BASE_URL = getApiUrl();
