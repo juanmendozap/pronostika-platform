@@ -81,16 +81,26 @@ const LoginPage: React.FC = () => {
             </button>
           </div>
 
-          <div className="text-center">
-            <span className="text-sm text-gray-600">
-              {t('login.noAccount')}{' '}
+          <div className="text-center space-y-2">
+            <div>
               <Link
-                to="/register"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
+                to="/forgot-password"
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
               >
-                {t('login.signUp')}
+                Forgot your password?
               </Link>
-            </span>
+            </div>
+            <div>
+              <span className="text-sm text-gray-600">
+                {t('login.noAccount')}{' '}
+                <Link
+                  to="/register"
+                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                >
+                  {t('login.signUp')}
+                </Link>
+              </span>
+            </div>
           </div>
         </form>
       </div>

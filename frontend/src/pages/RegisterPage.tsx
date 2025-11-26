@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { API_BASE_URL } from '../config/api';
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -42,7 +43,7 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,15 +57,16 @@ const RegisterPage: React.FC = () => {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         // Auto-login after successful registration
-        localStorage.setItem('token', data.token);
-        login(data.user, data.token);
+        localStorage.setItem('token', data.data.token);
+        login(data.data.user, data.data.token);
         navigate('/dashboard');
       } else {
-        setError(data.message || 'Registration failed');
+        setError(data.error || data.message || 'Registration failed');
       }
     } catch (err) {
+      console.error('Registration error:', err);
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

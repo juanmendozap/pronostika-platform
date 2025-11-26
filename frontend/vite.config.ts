@@ -17,4 +17,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: true,
   },
+  preview: {
+    port: 3000,
+  },
 })

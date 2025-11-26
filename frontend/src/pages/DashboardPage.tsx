@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import { API_BASE_URL } from '../config/api'
-import { getCacheBustTitle, getCacheBustWelcome } from '../utils/cacheBust'
+
 
 interface BetOption {
   id: string;
@@ -418,24 +418,32 @@ alert(t('bet.failedToPlace'))
                     <div className="space-y-3">
                       <h4 className="font-medium text-gray-900">Betting Options:</h4>
                       {bet.options.map((option) => (
-                        <div key={option.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                        <div 
+                          key={option.id} 
+                          className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-colors ${
+                            selectedBet === bet.id && selectedOption === option.id 
+                              ? 'bg-blue-50 border-blue-300' 
+                              : 'hover:bg-gray-50'
+                          }`}
+                          onClick={() => {
+                            setSelectedBet(bet.id)
+                            setSelectedOption(option.id)
+                          }}
+                        >
                           <div className="flex-1">
-                            <label className="flex items-center cursor-pointer">
+                            <label className="flex items-center cursor-pointer pointer-events-none">
                               <input
                                 type="radio"
                                 name={`bet-${bet.id}`}
                                 value={option.id}
                                 checked={selectedBet === bet.id && selectedOption === option.id}
-                                onChange={() => {
-                                  setSelectedBet(bet.id)
-                                  setSelectedOption(option.id)
-                                }}
+                                onChange={() => {}} // Handled by div onClick
                                 className="mr-3"
                               />
                               <span className="font-medium">{option.text}</span>
                             </label>
                           </div>
-                          <div className="text-right text-sm">
+                          <div className="text-right text-sm pointer-events-none">
                             <div className="font-bold text-green-600">
                               {option.odds.toFixed(2)}x odds
                             </div>

@@ -12,6 +12,7 @@ import betRoutes from './routes/bets';
 import categoryRoutes from './routes/categories';
 import adminRoutes from './routes/admin';
 import healthRoutes from './routes/health';
+import tempAdminRoutes from './routes/temp-admin';
 import { errorHandler } from './middleware/errorHandler';
 import { logger } from './utils/logger';
 import { initSocket } from './services/socketService';
@@ -52,6 +53,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/bets', betRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/temp', tempAdminRoutes); // Temporary admin route
 app.use('/api', healthRoutes);
 
 // Error handling

@@ -110,6 +110,11 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
         body: JSON.stringify(newBet)
       })
 
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || `Server error: ${response.status}`)
+      }
+
       const data = await response.json()
       if (data.success) {
         alert(t('admin.betCreated'))
@@ -121,11 +126,15 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
           options: [{ text: '', odds: 1.0 }, { text: '', odds: 1.0 }]
         })
       } else {
-        alert(data.error || t('admin.failedToCreate'))
+        throw new Error(data.error || t('admin.failedToCreate'))
       }
     } catch (error) {
       console.error('Error creating bet:', error)
-      alert(t('admin.failedToCreate'))
+      if (error instanceof Error) {
+        alert(`${t('admin.failedToCreate')}: ${error.message}`)
+      } else {
+        alert(t('admin.failedToCreate'))
+      }
     } finally {
       setCreating(false)
     }
@@ -159,6 +168,44 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
         <p className="mt-2 text-gray-600">{t('admin.subtitle')}</p>
       </div>
 
+      {/* Temporary Admin Fix - Remove after use */}
+      {!user?.isAdmin && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-medium text-yellow-800">Admin Access Required</h3>
+              <p className="text-sm text-yellow-700">Click the button to grant admin privileges to your account.</p>
+            </div>
+            <button
+              onClick={async () => {
+                try {
+                  const token = localStorage.getItem('token');
+                  const response = await fetch('/api/temp/make-me-admin', {
+                    method: 'POST',
+                    headers: {
+                      'Authorization': `Bearer ${token}`,
+                      'Content-Type': 'application/json'
+                    }
+                  });
+                  const data = await response.json();
+                  if (data.success) {
+                    alert('Success! You are now an admin. Refreshing page...');
+                    window.location.reload();
+                  } else {
+                    alert('Error: ' + data.error);
+                  }
+                } catch (error) {
+                  alert('Error: ' + error.message);
+                }
+              }}
+              className="px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md hover:bg-yellow-700"
+            >
+              Make Me Admin
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Tab Navigation */}
       <div className="border-b border-gray-200 mb-8">
         <nav className="-mb-px flex space-x-8">
@@ -170,7 +217,7 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-{t('admin.createBet')}
+            {t('admin.createBet')}
           </button>
           <button
             onClick={() => setActiveTab('manage-categories')}
@@ -183,9 +230,7 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
             {t('admin.manageCategories')}
           </button>
         </nav>
-      </div>
-
-      {/* Create New Bet Tab */}
+      </div>      {/* Create New Bet Tab */}
       {activeTab === 'create-bet' && (
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-6">{t('admin.createBettingMarket')}</h2>

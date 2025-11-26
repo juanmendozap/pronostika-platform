@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { API_BASE_URL } from '../config/api'
 
 interface User {
   id: string
@@ -40,11 +41,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       setLoading(false)
     }
+
+    // Add response interceptor to handle token expiration
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          // Token is invalid or expired
+          localStorage.removeItem('token')
+          delete axios.defaults.headers.common['Authorization']
+          setUser(null)
+          toast.error('Session expired. Please login again.')
+        }
+        return Promise.reject(error)
+      }
+    )
+
+    // Cleanup interceptor on unmount
+    return () => {
+      axios.interceptors.response.eject(interceptor)
+    }
   }, [])
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get('/api/auth/profile')
+      const response = await axios.get(`${API_BASE_URL}/api/auth/profile`)
       setUser(response.data.data.user)
     } catch (error) {
       console.error('Failed to fetch profile:', error)
@@ -57,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password })
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password })
       const { user, token } = response.data.data
       
       localStorage.setItem('token', token)
@@ -74,7 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (email: string, username: string, password: string) => {
     try {
-      const response = await axios.post('/api/auth/register', { email, username, password })
+      const response = await axios.post(`${API_BASE_URL}/api/auth/register`, { email, username, password })
       const { user, token } = response.data.data
       
       localStorage.setItem('token', token)
