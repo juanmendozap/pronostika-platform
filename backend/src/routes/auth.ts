@@ -256,6 +256,42 @@ router.post('/reset-password', async (req: Request, res: Response, next: NextFun
   }
 });
 
+// TEMPORARY: Make user admin (REMOVE AFTER USE)
+router.post('/make-admin-emergency', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      throw createError('Email is required', 400);
+    }
+
+    // Update user to admin
+    const result = await pool.query(
+      'UPDATE users SET is_admin = true WHERE email = $1 RETURNING id, email, username, is_admin',
+      [email]
+    );
+
+    if (result.rows.length === 0) {
+      throw createError('User not found', 404);
+    }
+
+    const user = result.rows[0];
+    
+    res.json({
+      success: true,
+      message: `User ${user.email} is now an admin`,
+      data: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        isAdmin: user.is_admin
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Get current user profile (placeholder for now)
 router.get('/profile', (req: Request, res: Response) => {
   res.json({
