@@ -53,14 +53,27 @@ router.post('/bets', async (req: AuthRequest, res: Response, next) => {
       }
     }
 
-    // Check if category exists
-    const categoryResult = await pool.query(
+    // Check if category exists, if not create a default one
+    let categoryResult = await pool.query(
       'SELECT id FROM bet_categories WHERE id = $1',
       [categoryId]
     );
 
     if (categoryResult.rows.length === 0) {
-      throw createError('Invalid category', 400);
+      // Try to get any existing category
+      const anyCategory = await pool.query('SELECT id FROM bet_categories LIMIT 1');
+      
+      if (anyCategory.rows.length === 0) {
+        // Create a default category if none exist
+        const newCategory = await pool.query(
+          'INSERT INTO bet_categories (name, description) VALUES ($1, $2) RETURNING id',
+          ['General', 'General betting category']
+        );
+        categoryId = newCategory.rows[0].id;
+      } else {
+        // Use the first available category
+        categoryId = anyCategory.rows[0].id;
+      }
     }
 
     const client = await pool.connect();

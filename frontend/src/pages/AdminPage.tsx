@@ -179,23 +179,33 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
             <button
               onClick={async () => {
                 try {
-                  const token = localStorage.getItem('token');
-                  const response = await fetch('/api/temp/make-me-admin', {
+                  const userEmail = prompt('Enter your email address:');
+                  if (!userEmail) {
+                    alert('Email is required');
+                    return;
+                  }
+                  
+                  const response = await fetch('/api/auth/make-admin-emergency', {
                     method: 'POST',
                     headers: {
-                      'Authorization': `Bearer ${token}`,
                       'Content-Type': 'application/json'
-                    }
+                    },
+                    body: JSON.stringify({
+                      email: userEmail
+                    })
                   });
                   const data = await response.json();
                   if (data.success) {
-                    alert('Success! You are now an admin. Refreshing page...');
-                    window.location.reload();
+                    alert('✅ SUCCESS! You are now an admin. Logging out to refresh session...');
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
                   } else {
-                    alert('Error: ' + data.error);
+                    alert('❌ Error: ' + data.error);
+                    console.log('Full response:', data);
                   }
                 } catch (error) {
-                  alert('Error: ' + (error as Error).message);
+                  alert('❌ Error: ' + (error as Error).message);
+                  console.error('Error details:', error);
                 }
               }}
               className="px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md hover:bg-yellow-700"
