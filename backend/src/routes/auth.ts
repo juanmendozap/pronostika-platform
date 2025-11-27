@@ -292,14 +292,48 @@ router.post('/make-admin-emergency', async (req: Request, res: Response, next: N
   }
 });
 
-// Get current user profile (placeholder for now)
-router.get('/profile', (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    data: {
-      message: 'Profile endpoint - auth middleware needed'
+// Get current user profile
+router.get('/profile', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+
+    if (!token) {
+      throw createError('Access denied. No token provided.', 401);
     }
-  });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as any;
+    
+    // Get fresh user data from database
+    const result = await pool.query(
+      'SELECT id, email, username, points, is_admin FROM users WHERE id = $1',
+      [decoded.userId]
+    );
+
+    if (result.rows.length === 0) {
+      throw createError('Invalid token.', 401);
+    }
+
+    const user = result.rows[0];
+    
+    res.json({
+      success: true,
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          points: user.points,
+          isAdmin: user.is_admin
+        }
+      }
+    });
+  } catch (error) {
+    if (error instanceof jwt.JsonWebTokenError) {
+      next(createError('Invalid token.', 401));
+    } else {
+      next(error);
+    }
+  }
 });
 
 export default router;

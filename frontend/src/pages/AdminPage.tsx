@@ -195,7 +195,7 @@ const response = await fetch(`${API_BASE_URL}/api/admin/bets`, {
                     alert('Error: ' + data.error);
                   }
                 } catch (error) {
-                  alert('Error: ' + error.message);
+                  alert('Error: ' + (error as Error).message);
                 }
               }}
               className="px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-md hover:bg-yellow-700"
