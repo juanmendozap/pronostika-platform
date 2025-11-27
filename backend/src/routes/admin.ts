@@ -34,7 +34,8 @@ router.get('/stats', async (req: AuthRequest, res: Response, next) => {
 // Create a new bet
 router.post('/bets', async (req: AuthRequest, res: Response, next) => {
   try {
-    const { title, description, categoryId, options } = req.body;
+    const { title, description, options } = req.body;
+    let { categoryId } = req.body;
     const userId = req.user!.id;
 
     // Validate input
