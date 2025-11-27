@@ -20,6 +20,10 @@ import { initSocket } from './services/socketService';
 dotenv.config();
 
 const app = express();
+
+// Trust proxy for Railway/production deployment
+app.set('trust proxy', true);
+
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
